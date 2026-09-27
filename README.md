@@ -1,46 +1,60 @@
-\# Cyber Grid Survivor
+# Cyber Grid Survivor
 
+A deterministic, high-performance 2D arcade survival micro-engine built from scratch in modern C++ and SDL2. Engineered without third-party game engines or external asset dependencies, the project demonstrates low-level systems programming, real-time kinematics, custom collision algorithms, and hardware-accelerated procedural rendering.
 
+Developed as a technical submission for the E-Cell SRMIST Technical Domain trial.
 
-A deterministic, high-performance 2D arcade survival shooter and micro-engine built from scratch in C++ and low-level SDL2 primitives for the E-Cell SRMIST Technical Domain trial.
+---
 
+## Technical Highlights & Architecture
 
+- **Deterministic 60 FPS Fixed Pipeline:** Combines high-resolution frame-time delta calculations (`SDL_GetTicks`) with thread suspension (`SDL_Delay`) and GPU VSync presentation to guarantee deterministic simulation rates and eliminate screen tearing.
+- **Dual-Layer Input Architecture:** 
+  - *Discrete Queue:* Processes OS-level events, EMP triggers, and game resets via `SDL_PollEvent`.
+  - *Continuous Hardware Polling:* Polls raw scancode states every frame via `SDL_GetKeyboardState` for latency-free 8-directional movement and independent twin-stick projectile firing without OS key-repeat stutter.
+- **Custom Mathematical Solvers:**
+  - *AABB Collision Detection:* Real-time 4-axis bounding box overlap tests ($O(1)$ per entity pair) without external physics engines.
+  - *Vector AI Tracking:* Autonomous enemy pursuit using Euclidean normalized direction vectors:
+    $$\vec{v} = \frac{\vec{d}}{\Vert{}\vec{d}\Vert{}} \cdot s$$
+  - *Trigonometric Particle Simulation:* Generates dynamic radial debris bursts by converting randomized polar velocity vectors to Cartesian space:
+    $$v_x = \cos(\theta) \cdot s, \quad v_y = \sin(\theta) \cdot s$$
+- **Zero-Asset Procedural Graphics Pipeline:** 
+  - Complete elimination of image (`.png`, `.bmp`) and font (`.ttf`) files.
+  - 100% GPU-accelerated drawing calls using `SDL_Renderer` primitives.
+  - Custom procedural 7-segment digital font engine using bitmask lookup tables (`bool seg[10][7]`) to draw live digital scores and multipliers.
+- **Memory Safety & Entity Lifecycle:** Manages hundreds of dynamic bullets, enemies, and particles across contiguous `std::vector` pools, purging expired entities every frame via the C++ Erase-Remove idiom (`std::remove_if`).
 
-\## Technical Architecture \& Highlights
+---
 
-\- \*\*Deterministic 60 FPS Game Loop:\*\* Frame-delta capped with hardware VSync via SDL2.
+## Tech Stack
 
-\- \*\*Dual-Layer Input Architecture:\*\* Combines discrete event queue polling (`SDL\_PollEvent`) with continuous hardware scancode states (`SDL\_GetKeyboardState`) for zero-latency 8-way WASD movement and independent arrow-key shooting.
+- **Language:** C++17 / C++20 (STL: `<vector>`, `<cmath>`, `<algorithm>`)
+- **Graphics & Platform API:** SDL2 (Simple DirectMedia Layer 2.x)
+- **Toolchain:** Microsoft Visual Studio 2022 (MSVC x64)
+- **Dependencies:** Statically linked against `SDL2.lib`, dynamically loaded via `SDL2.dll`
 
-\- \*\*Custom Mathematical Solvers:\*\*
+---
 
-&#x20; - Axis-Aligned Bounding Box (AABB) intersection detection without third-party physics libraries.
+## Game Controls
 
-&#x20; - Autonomous homing AI using Euclidean normalized pursuit vectors ($\\vec{v} = \\frac{\\vec{d}}{\\Vert{}\\vec{d}\\Vert{}} \\cdot s$).
+| Action | Key / Input |
+| :--- | :--- |
+| **Move** | `W`, `A`, `S`, `D` (8-Directional) |
+| **Shoot** | `Arrow Keys` (Independent Twin-Stick) |
+| **EMP Screen-Wipe** | `Spacebar` (Consumes full charge) |
+| **Restart Game** | `R` (Available on Game Over) |
+| **Quit** | `Esc` or Window Close Button |
 
-\- \*\*Zero External Assets:\*\* 100% code-driven graphics via GPU hardware primitives (`SDL\_Renderer`), including a custom 7-segment LED digital score engine and dynamic screenshake.
+---
 
+## Building and Running Locally
 
+### Prerequisites
+- Visual Studio 2022 with the **Desktop development with C++** workload installed.
+- SDL2 Development Libraries for VC++ (`SDL2-devel-2.x.x-VC.zip`).
 
-\## Tech Stack
-
-\- \*\*Language:\*\* C++ (STL vectors, algorithm, cmath)
-
-\- \*\*Library:\*\* SDL2 (Simple DirectMedia Layer 2.x)
-
-\- \*\*IDE:\*\* Visual Studio 2022 (x64)
-
-
-
-\## Controls
-
-\- `WASD`: 8-Directional Movement
-
-\- `Arrow Keys`: Twin-Stick Directional Shooting
-
-\- `Spacebar`: Detonate EMP Screen-Wipe (when supercharged)
-
-\- `R`: Restart Game on Game Over
-
-\- `Esc`: Quit
-
+### Setup Instructions
+1. Clone this repository:
+   ```bash
+   git clone [https://github.com/YOUR_USERNAME/Cyber-Grid-Survivor.git](https://github.com/YOUR_USERNAME/Cyber-Grid-Survivor.git)
+   cd Cyber-Grid-Survivor
