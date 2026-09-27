@@ -1,0 +1,4 @@
+﻿  CyberGridSurvivor.cpp
+C:\Users\aryan\source\repos\CyberGridSurvivor\CyberGridSurvivor.cpp(199,46): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\aryan\source\repos\CyberGridSurvivor\CyberGridSurvivor.cpp(200,51): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+  CyberGridSurvivor.vcxproj -> C:\Users\aryan\source\repos\CyberGridSurvivor\x64\Debug\CyberGridSurvivor.exe
